@@ -367,9 +367,9 @@ Sprite = function () {
 
 Ship = function () {
   this.init("ship",
-            [-5,   4,
-              0, -12,
-              5,   4]);
+            [-12,   10,
+              0, -25,
+              12,   10]);
 
   this.children.exhaust = new Sprite();
   this.children.exhaust.init("exhaust",
@@ -384,20 +384,35 @@ Ship = function () {
   this.collidesWith = ["asteroid", "bigalien", "alienbullet"];
 
   this.preMove = function (delta) {
-    if (KEY_STATUS.left) {
+    if (KEY_STATUS.left)
+    {
       this.vel.rot = -6;
-    } else if (KEY_STATUS.right) {
+    }
+    else if (KEY_STATUS.right)
+    {
       this.vel.rot = 6;
-    } else {
+    }
+    else
+    {
       this.vel.rot = 0;
     }
 
-    if (KEY_STATUS.up) {
+    if (KEY_STATUS.up)
+    {
       var rad = ((this.rot-90) * Math.PI)/180;
-      this.acc.x = 0.5 * Math.cos(rad);
-      this.acc.y = 0.5 * Math.sin(rad);
+      this.acc.x = 0.3 * Math.cos(rad);
+      this.acc.y = 0.3 * Math.sin(rad);
       this.children.exhaust.visible = Math.random() > 0.1;
-    } else {
+    }
+    else if (KEY_STATUS.down)
+    {
+      var rad = ((this.rot-90) * Math.PI)/180;
+      this.acc.x = -0.3 * Math.cos(rad);
+      this.acc.y = -0.3 * Math.sin(rad);
+      this.children.exhaust.visible = Math.random() > 0.1;
+    }
+    else
+    {
       this.acc.x = 0;
       this.acc.y = 0;
       this.children.exhaust.visible = false;
@@ -408,7 +423,7 @@ Ship = function () {
     }
     if (KEY_STATUS.space) {
       if (this.bulletCounter <= 0) {
-        this.bulletCounter = 10;
+        this.bulletCounter = 5;
         for (var i = 0; i < this.bullets.length; i++) {
           if (!this.bullets[i].visible) {
             SFX.laser();
@@ -819,8 +834,8 @@ Text = {
   renderText: function(text, size, x, y) {
     this.context.save();
 
-    this.context.translate(x, y);
 
+    this.context.translate(x, y);
     var pixels = size * 72 / (this.face.resolution * 100);
     this.context.scale(pixels, -1 * pixels);
     this.context.beginPath();
@@ -1077,7 +1092,7 @@ $(function () {
   sprites.push(ship);
 
   ship.bullets = [];
-  for (var i = 0; i < 10; i++) {
+  for (var i = 0; i < 0; i++) {
     var bull = new Bullet();
     ship.bullets.push(bull);
     sprites.push(bull);
